@@ -6,6 +6,8 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Label } from '@/components/ui/label';
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
+import { ChevronDown, ChevronUp } from 'lucide-react';
 
 import { Toaster } from '@/components/ui/sonner';
 import { toast } from 'sonner';
@@ -21,6 +23,7 @@ export default function Home() {
   const [firstIP, setFirstIP] = useState<string>('');
   const [lastIP, setLastIP] = useState<string>('');
   const [totalIPs, setTotalIPs] = useState<number>(0);
+  const [isOpen, setIsOpen] = useState(false);
 
   const form = useForm<FormValues>({
     defaultValues: {
@@ -139,45 +142,51 @@ export default function Home() {
           <CardContent>
             <Form {...form}>
               <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-                <div className="mb-4 p-4 border rounded-md bg-muted/50">
-                  <h3 className="text-sm font-medium mb-2">CIDR 格式说明</h3>
-                  <div className="relative">
-                    <div className="flex items-center justify-center mb-4">
-                      <div className="flex items-center border rounded overflow-hidden">
-                        <div className="bg-blue-100 px-4 py-2 border-r">
-                          <code>192.168.1.0</code>
+                
+                <Collapsible open={isOpen} onOpenChange={setIsOpen} className="border rounded-md bg-muted/50">
+                  <CollapsibleTrigger className="flex w-full items-center justify-between p-4 text-sm font-medium">
+                    <span>CIDR 格式说明</span>
+                    {isOpen ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
+                  </CollapsibleTrigger>
+                  <CollapsibleContent className="p-4 pt-0">
+                    <div className="relative">
+                      <div className="flex items-center justify-center mb-4">
+                        <div className="flex items-center border rounded overflow-hidden">
+                          <div className="bg-blue-100 px-4 py-2 border-r">
+                            <code>192.168.1.0</code>
+                          </div>
+                          <div className="bg-green-100 px-2 py-2">
+                            <code>/24</code>
+                          </div>
                         </div>
-                        <div className="bg-green-100 px-2 py-2">
-                          <code>/24</code>
+                      </div>
+                      
+                      <div className="grid grid-cols-2 gap-4 text-xs">
+                        <div>
+                          <h4 className="font-semibold text-blue-600 mb-1">网络地址部分</h4>
+                          <ul className="list-disc list-inside space-y-1">
+                            <li>由4个八位字节组成，以点分十进制表示</li>
+                            <li>每个八位字节必须是0-255之间的整数</li>
+                            <li>例如：192.168.1.0</li>
+                          </ul>
+                        </div>
+                        <div>
+                          <h4 className="font-semibold text-green-600 mb-1">前缀长度部分</h4>
+                          <ul className="list-disc list-inside space-y-1">
+                            <li>以斜杠(/)开头，表示网络前缀的位数</li>
+                            <li>必须是1-32之间的整数</li>
+                            <li>决定了子网的大小</li>
+                            <li>例如：/24表示前24位是网络部分</li>
+                          </ul>
                         </div>
                       </div>
-                    </div>
-                    
-                    <div className="grid grid-cols-2 gap-4 text-xs">
-                      <div>
-                        <h4 className="font-semibold text-blue-600 mb-1">网络地址部分</h4>
-                        <ul className="list-disc list-inside space-y-1">
-                          <li>由 4 个八位字节组成，以点分十进制表示</li>
-                          <li>每个八位字节必须是 0-255 之间的整数</li>
-                          <li>例如：192.168.1.0</li>
-                        </ul>
-                      </div>
-                      <div>
-                        <h4 className="font-semibold text-green-600 mb-1">前缀长度部分</h4>
-                        <ul className="list-disc list-inside space-y-1">
-                          <li>以斜杠(/)开头，表示网络前缀的位数</li>
-                          <li>必须是 1-32 之间的整数</li>
-                          <li>决定了子网的大小</li>
-                          <li>例如：/24 表示前 24 位是网络部分</li>
-                        </ul>
+                      
+                      <div className="mt-3 text-xs text-gray-500">
+                        <p>示例：192.168.1.0/24 表示一个包含256个IP地址的网络，其中192.168.1.0是网络地址，192.168.1.255是广播地址</p>
                       </div>
                     </div>
-                    
-                    <div className="mt-3 text-xs text-gray-500">
-                      <p>示例：192.168.1.0/24 表示一个包含 256 个 IP 地址的网络，其中 192.168.1.0 是网络地址，192.168.1.255 是广播地址</p>
-                    </div>
-                  </div>
-                </div>
+                  </CollapsibleContent>
+                </Collapsible>
                 
                 <FormField
                   control={form.control}
