@@ -12,6 +12,7 @@ import { ChevronDown, ChevronUp } from 'lucide-react';
 import { Toaster } from '@/components/ui/sonner';
 import { toast } from 'sonner';
 import { useForm } from 'react-hook-form';
+import { Copy } from 'lucide-react';
 
 interface FormValues {
   cidr: string;
@@ -136,58 +137,56 @@ export default function Home() {
         <h1 className="text-3xl font-bold text-center mb-8">CIDR 转换器</h1>
         
         <Card>
-          <CardHeader>
+          <CardHeader className="flex flex-row items-center justify-between">
             <CardTitle>输入 CIDR 块</CardTitle>
+            <Collapsible open={isOpen} onOpenChange={setIsOpen}>
+              <CollapsibleTrigger className="text-sm text-muted-foreground hover:text-primary flex items-center gap-1">
+                CIDR 格式说明
+                {isOpen ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
+              </CollapsibleTrigger>
+              <CollapsibleContent className="absolute z-50 mt-2 p-4 bg-white border rounded-lg shadow-lg w-[500px] right-4">
+                <div className="relative">
+                  <div className="flex items-center justify-center mb-4">
+                    <div className="flex items-center border rounded overflow-hidden">
+                      <div className="bg-blue-100 px-4 py-2 border-r">
+                        <code>192.168.1.0</code>
+                      </div>
+                      <div className="bg-green-100 px-2 py-2">
+                        <code>/24</code>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div className="grid grid-cols-2 gap-4 text-xs">
+                    <div>
+                      <h4 className="font-semibold text-blue-600 mb-1">网络地址部分</h4>
+                      <ul className="list-disc list-inside space-y-1">
+                        <li>由4个八位字节组成，以点分十进制表示</li>
+                        <li>每个八位字节必须是0-255之间的整数</li>
+                        <li>例如：192.168.1.0</li>
+                      </ul>
+                    </div>
+                    <div>
+                      <h4 className="font-semibold text-green-600 mb-1">前缀长度部分</h4>
+                      <ul className="list-disc list-inside space-y-1">
+                        <li>以斜杠(/)开头，表示网络前缀的位数</li>
+                        <li>必须是1-32之间的整数</li>
+                        <li>决定了子网的大小</li>
+                        <li>例如：/24表示前24位是网络部分</li>
+                      </ul>
+                    </div>
+                  </div>
+                  
+                  <div className="mt-3 text-xs text-gray-500">
+                    <p>示例：192.168.1.0/24 表示一个包含256个IP地址的网络，其中192.168.1.0是网络地址，192.168.1.255是广播地址</p>
+                  </div>
+                </div>
+              </CollapsibleContent>
+            </Collapsible>
           </CardHeader>
           <CardContent>
             <Form {...form}>
               <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-                
-                <Collapsible open={isOpen} onOpenChange={setIsOpen} className="border rounded-md bg-muted/50">
-                  <CollapsibleTrigger className="flex w-full items-center justify-between p-4 text-sm font-medium">
-                    <span>CIDR 格式说明</span>
-                    {isOpen ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
-                  </CollapsibleTrigger>
-                  <CollapsibleContent className="p-4 pt-0">
-                    <div className="relative">
-                      <div className="flex items-center justify-center mb-4">
-                        <div className="flex items-center border rounded overflow-hidden">
-                          <div className="bg-blue-100 px-4 py-2 border-r">
-                            <code>192.168.1.0</code>
-                          </div>
-                          <div className="bg-green-100 px-2 py-2">
-                            <code>/24</code>
-                          </div>
-                        </div>
-                      </div>
-                      
-                      <div className="grid grid-cols-2 gap-4 text-xs">
-                        <div>
-                          <h4 className="font-semibold text-blue-600 mb-1">网络地址部分</h4>
-                          <ul className="list-disc list-inside space-y-1">
-                            <li>由4个八位字节组成，以点分十进制表示</li>
-                            <li>每个八位字节必须是0-255之间的整数</li>
-                            <li>例如：192.168.1.0</li>
-                          </ul>
-                        </div>
-                        <div>
-                          <h4 className="font-semibold text-green-600 mb-1">前缀长度部分</h4>
-                          <ul className="list-disc list-inside space-y-1">
-                            <li>以斜杠(/)开头，表示网络前缀的位数</li>
-                            <li>必须是1-32之间的整数</li>
-                            <li>决定了子网的大小</li>
-                            <li>例如：/24表示前24位是网络部分</li>
-                          </ul>
-                        </div>
-                      </div>
-                      
-                      <div className="mt-3 text-xs text-gray-500">
-                        <p>示例：192.168.1.0/24 表示一个包含256个IP地址的网络，其中192.168.1.0是网络地址，192.168.1.255是广播地址</p>
-                      </div>
-                    </div>
-                  </CollapsibleContent>
-                </Collapsible>
-                
                 <FormField
                   control={form.control}
                   name="cidr"
@@ -219,8 +218,13 @@ export default function Home() {
                   <Label htmlFor="ip-range">IP 范围</Label>
                   <div className="flex mt-1">
                     <code className="flex-1 block p-2 rounded bg-muted overflow-x-auto">{ipRange}</code>
-                    <Button variant="outline" className="ml-2" onClick={() => handleCopyToClipboard(ipRange)}>
-                      复制
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="ml-2 opacity-50 hover:opacity-100 transition-all"
+                      onClick={() => handleCopyToClipboard(ipRange)}
+                    >
+                      <Copy className="h-4 w-4" />
                     </Button>
                   </div>
                 </div>
@@ -228,8 +232,13 @@ export default function Home() {
                   <Label htmlFor="network-mask">网络掩码</Label>
                   <div className="flex mt-1">
                     <code className="flex-1 block p-2 rounded bg-muted overflow-x-auto">{networkMask}</code>
-                    <Button variant="outline" className="ml-2" onClick={() => handleCopyToClipboard(networkMask)}>
-                      复制
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="ml-2 opacity-50 hover:opacity-100 transition-all"
+                      onClick={() => handleCopyToClipboard(networkMask)}
+                    >
+                      <Copy className="h-4 w-4" />
                     </Button>
                   </div>
                 </div>
@@ -237,8 +246,13 @@ export default function Home() {
                   <Label htmlFor="first-ip">第一个可用 IP</Label>
                   <div className="flex mt-1">
                     <code className="flex-1 block p-2 rounded bg-muted overflow-x-auto">{firstIP}</code>
-                    <Button variant="outline" className="ml-2" onClick={() => handleCopyToClipboard(firstIP)}>
-                      复制
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="ml-2 opacity-50 hover:opacity-100 transition-all"
+                      onClick={() => handleCopyToClipboard(firstIP)}
+                    >
+                      <Copy className="h-4 w-4" />
                     </Button>
                   </div>
                 </div>
@@ -246,8 +260,13 @@ export default function Home() {
                   <Label htmlFor="last-ip">最后一个可用 IP</Label>
                   <div className="flex mt-1">
                     <code className="flex-1 block p-2 rounded bg-muted overflow-x-auto">{lastIP}</code>
-                    <Button variant="outline" className="ml-2" onClick={() => handleCopyToClipboard(lastIP)}>
-                      复制
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="absolute top-1 right-1 opacity-30 hover:opacity-100 hover:scale-110 transition-all"
+                      onClick={() => handleCopyToClipboard(lastIP)}
+                    >
+                      <Copy className="h-4 w-4" />
                     </Button>
                   </div>
                 </div>
@@ -257,8 +276,13 @@ export default function Home() {
                 <Label htmlFor="total-ips">总 IP 数量</Label>
                 <div className="flex mt-1">
                   <code className="flex-1 block p-2 rounded bg-muted overflow-x-auto">{totalIPs.toString()}</code>
-                  <Button variant="outline" className="ml-2" onClick={() => handleCopyToClipboard(totalIPs.toString())}>
-                    复制
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="absolute top-1 right-1 opacity-30 hover:opacity-100 hover:scale-110 transition-all"
+                    onClick={() => handleCopyToClipboard(totalIPs.toString())}
+                  >
+                    <Copy className="h-4 w-4" />
                   </Button>
                 </div>
               </div>
