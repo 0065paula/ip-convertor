@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -25,6 +25,20 @@ export default function Home() {
   const [lastIP, setLastIP] = useState<string>('');
   const [totalIPs, setTotalIPs] = useState<number>(0);
   const [isOpen, setIsOpen] = useState(false);
+  const collapsibleRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (collapsibleRef.current && !collapsibleRef.current.contains(event.target as Node)) {
+        setIsOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
 
   const form = useForm<FormValues>({
     defaultValues: {
@@ -140,7 +154,8 @@ export default function Home() {
           <CardHeader className="flex flex-row items-center justify-between">
             <CardTitle>输入 CIDR 块</CardTitle>
             <Collapsible open={isOpen} onOpenChange={setIsOpen}>
-              <CollapsibleTrigger className="text-sm text-muted-foreground hover:text-primary flex items-center gap-1">
+              <div ref={collapsibleRef}>
+                <CollapsibleTrigger className="text-sm text-muted-foreground hover:text-primary flex items-center gap-1">
                 CIDR 格式说明
                 {isOpen ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
               </CollapsibleTrigger>
@@ -182,6 +197,7 @@ export default function Home() {
                   </div>
                 </div>
               </CollapsibleContent>
+              </div>
             </Collapsible>
           </CardHeader>
           <CardContent>
