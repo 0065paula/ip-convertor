@@ -142,7 +142,7 @@ export default function Home() {
         
         <Card>
           <CardHeader className="flex flex-row items-center justify-between">
-            <CardTitle>{t('inputTitle')}</CardTitle>
+            <CardTitle>{t('resultTitle')}</CardTitle>
             <Collapsible open={isOpen} onOpenChange={setIsOpen}>
               <div ref={collapsibleRef}>
                 <CollapsibleTrigger className="text-sm text-muted-foreground hover:text-primary flex items-center gap-1">
@@ -206,7 +206,7 @@ export default function Home() {
                     </FormItem>
                   )}
                 />
-                <Button type="submit" className="w-full">{t('convert')}</Button>
+                <Button type="submit" className="w-full">{t('submitButton')}</Button>
               </form>
             </Form>
 
@@ -216,7 +216,7 @@ export default function Home() {
                 <div className="grid gap-4">
                   <div className="flex justify-between items-center p-3 bg-gray-50 rounded">
                     <div>
-                      <Label className="text-sm text-gray-500">{t('ipRange')}</Label>
+                      <Label className="text-sm text-gray-500">{t('ipRangeLabel')}</Label>
                       <div className="font-mono">{ipRange}</div>
                     </div>
                     <Button variant="ghost" size="icon" onClick={() => handleCopyToClipboard(ipRange)}>
@@ -226,7 +226,7 @@ export default function Home() {
 
                   <div className="flex justify-between items-center p-3 bg-gray-50 rounded">
                     <div>
-                      <Label className="text-sm text-gray-500">{t('networkMask')}</Label>
+                      <Label className="text-sm text-gray-500">{t('networkMaskLabel')}</Label>
                       <div className="font-mono">{networkMask}</div>
                     </div>
                     <Button variant="ghost" size="icon" onClick={() => handleCopyToClipboard(networkMask)}>
@@ -236,7 +236,7 @@ export default function Home() {
 
                   <div className="flex justify-between items-center p-3 bg-gray-50 rounded">
                     <div>
-                      <Label className="text-sm text-gray-500">{t('firstIP')}</Label>
+                      <Label className="text-sm text-gray-500">{t('firstIPLabel')}</Label>
                       <div className="font-mono">{firstIP}</div>
                     </div>
                     <Button variant="ghost" size="icon" onClick={() => handleCopyToClipboard(firstIP)}>
@@ -246,7 +246,7 @@ export default function Home() {
 
                   <div className="flex justify-between items-center p-3 bg-gray-50 rounded">
                     <div>
-                      <Label className="text-sm text-gray-500">{t('lastIP')}</Label>
+                      <Label className="text-sm text-gray-500">{t('lastIPLabel')}</Label>
                       <div className="font-mono">{lastIP}</div>
                     </div>
                     <Button variant="ghost" size="icon" onClick={() => handleCopyToClipboard(lastIP)}>
@@ -256,11 +256,11 @@ export default function Home() {
 
                   <div className="flex justify-between items-center p-3 bg-gray-50 rounded">
                     <div>
-                      <Label className="text-sm text-gray-500">{t('totalIPs')}</Label>
+                      <Label className="text-sm text-gray-500">{t('totalIPsLabel')}</Label>
                       <div className="font-mono">{totalIPs}</div>
                     </div>
-                    <Button variant="ghost" size="icon" onClick={() => handleCopyToClipboard(totalIPs.toString())}>
-                      <Copy className="h-4 w-4" />
+                    <Button variant="outline" className="ml-2" onClick={() => handleCopyToClipboard(ipRange)}>
+                      {t('copyButton')}
                     </Button>
                   </div>
                 </div>
