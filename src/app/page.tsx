@@ -29,13 +29,13 @@ export default function Home() {
   });
 
   const validateCIDR = (cidr: string): boolean => {
-    // 基本CIDR格式验证: IP/前缀长度
+    // 基本 CIDR 格式验证: IP/前缀长度
     const cidrPattern = /^(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})\/(\d{1,2})$/;
     if (!cidrPattern.test(cidr)) {
       return false;
     }
 
-    // 验证IP地址部分的每个八位字节是否在0-255范围内
+    // 验证 IP 地址部分的每个八位字节是否在 0-255 范围内
     const parts = cidr.split('/');
     const ipParts = parts[0].split('.');
     for (let i = 0; i < 4; i++) {
@@ -45,7 +45,7 @@ export default function Home() {
       }
     }
 
-    // 验证前缀长度是否在1-32范围内
+    // 验证前缀长度是否在 1-32 范围内
     const prefixLength = parseInt(parts[1]);
     if (prefixLength < 0 || prefixLength > 32) {
       return false;
@@ -56,14 +56,14 @@ export default function Home() {
 
   const convertCIDR = (cidr: string) => {
     if (!validateCIDR(cidr)) {
-      toast.error('无效的CIDR格式，请使用如192.168.1.0/24的格式');
+      toast.error('无效的 CIDR 格式，请使用如 192.168.1.0/24 的格式');
       return;
     }
 
     const [ipPart, prefixPart] = cidr.split('/');
     const prefixLength = parseInt(prefixPart);
     
-    // 将IP地址转换为32位二进制数
+    // 将 IP 地址转换为 32 位二进制数
     const ipOctets = ipPart.split('.').map(octet => parseInt(octet));
     let ipBinary = '';
     ipOctets.forEach(octet => {
@@ -74,11 +74,11 @@ export default function Home() {
     const networkBinary = ipBinary.substring(0, prefixLength).padEnd(32, '0');
     const broadcastBinary = ipBinary.substring(0, prefixLength).padEnd(32, '1');
     
-    // 计算第一个和最后一个可用IP地址
+    // 计算第一个和最后一个可用 IP 地址
     let firstIPBinary = networkBinary;
     let lastIPBinary = broadcastBinary;
     
-    // 如果不是/31或/32网络，则第一个可用IP是网络地址+1，最后一个可用IP是广播地址-1
+    // 如果不是 /31 或 /32 网络，则第一个可用 IP 是网络地址 +1，最后一个可用 IP 是广播地址 -1
     if (prefixLength < 31) {
       firstIPBinary = (BigInt('0b' + networkBinary) + 1n).toString(2).padStart(32, '0');
       lastIPBinary = (BigInt('0b' + broadcastBinary) - 1n).toString(2).padStart(32, '0');
@@ -94,7 +94,7 @@ export default function Home() {
     const subnetMaskBinary = '1'.repeat(prefixLength).padEnd(32, '0');
     const subnetMask = binaryToIP(subnetMaskBinary);
     
-    // 计算总IP数量
+    // 计算总 IP 数量
     const totalIPAddresses = Math.pow(2, 32 - prefixLength);
     
     // 更新状态
@@ -104,10 +104,10 @@ export default function Home() {
     setLastIP(lastIPAddress);
     setTotalIPs(totalIPAddresses);
     
-    toast.success('CIDR转换成功');
+    toast.success('CIDR 转换成功');
   };
   
-  // 辅助函数：将32位二进制字符串转换为点分十进制IP地址
+  // 辅助函数：将 32 位二进制字符串转换为点分十进制 IP 地址
   const binaryToIP = (binary: string): string => {
     const octets = [];
     for (let i = 0; i < 32; i += 8) {
@@ -134,8 +134,7 @@ export default function Home() {
         
         <Card>
           <CardHeader>
-            <CardTitle>输入CIDR块</CardTitle>
-            <CardDescription>输入CIDR格式的网络地址（例如：192.168.1.0/24）</CardDescription>
+            <CardTitle>输入 CIDR 块</CardTitle>
           </CardHeader>
           <CardContent>
             <Form {...form}>
@@ -158,8 +157,8 @@ export default function Home() {
                       <div>
                         <h4 className="font-semibold text-blue-600 mb-1">网络地址部分</h4>
                         <ul className="list-disc list-inside space-y-1">
-                          <li>由4个八位字节组成，以点分十进制表示</li>
-                          <li>每个八位字节必须是0-255之间的整数</li>
+                          <li>由 4 个八位字节组成，以点分十进制表示</li>
+                          <li>每个八位字节必须是 0-255 之间的整数</li>
                           <li>例如：192.168.1.0</li>
                         </ul>
                       </div>
@@ -167,15 +166,15 @@ export default function Home() {
                         <h4 className="font-semibold text-green-600 mb-1">前缀长度部分</h4>
                         <ul className="list-disc list-inside space-y-1">
                           <li>以斜杠(/)开头，表示网络前缀的位数</li>
-                          <li>必须是1-32之间的整数</li>
+                          <li>必须是 1-32 之间的整数</li>
                           <li>决定了子网的大小</li>
-                          <li>例如：/24表示前24位是网络部分</li>
+                          <li>例如：/24 表示前 24 位是网络部分</li>
                         </ul>
                       </div>
                     </div>
                     
                     <div className="mt-3 text-xs text-gray-500">
-                      <p>示例：192.168.1.0/24 表示一个包含256个IP地址的网络，其中192.168.1.0是网络地址，192.168.1.255是广播地址</p>
+                      <p>示例：192.168.1.0/24 表示一个包含 256 个 IP 地址的网络，其中 192.168.1.0 是网络地址，192.168.1.255 是广播地址</p>
                     </div>
                   </div>
                 </div>
@@ -189,9 +188,6 @@ export default function Home() {
                       <FormControl>
                         <Input placeholder="例如：192.168.1.0/24" {...field} />
                       </FormControl>
-                      <FormDescription>
-                        请输入有效的CIDR格式地址
-                      </FormDescription>
                       <FormMessage />
                     </FormItem>
                   )}
@@ -229,7 +225,7 @@ export default function Home() {
                   </div>
                 </div>
                 <div>
-                  <Label htmlFor="first-ip">第一个可用IP</Label>
+                  <Label htmlFor="first-ip">第一个可用 IP</Label>
                   <div className="flex mt-1">
                     <code className="flex-1 block p-2 rounded bg-muted overflow-x-auto">{firstIP}</code>
                     <Button variant="outline" className="ml-2" onClick={() => handleCopyToClipboard(firstIP)}>
@@ -238,7 +234,7 @@ export default function Home() {
                   </div>
                 </div>
                 <div>
-                  <Label htmlFor="last-ip">最后一个可用IP</Label>
+                  <Label htmlFor="last-ip">最后一个可用 IP</Label>
                   <div className="flex mt-1">
                     <code className="flex-1 block p-2 rounded bg-muted overflow-x-auto">{lastIP}</code>
                     <Button variant="outline" className="ml-2" onClick={() => handleCopyToClipboard(lastIP)}>
@@ -249,7 +245,7 @@ export default function Home() {
               </div>
               
               <div>
-                <Label htmlFor="total-ips">总IP数量</Label>
+                <Label htmlFor="total-ips">总 IP 数量</Label>
                 <div className="flex mt-1">
                   <code className="flex-1 block p-2 rounded bg-muted overflow-x-auto">{totalIPs.toString()}</code>
                   <Button variant="outline" className="ml-2" onClick={() => handleCopyToClipboard(totalIPs.toString())}>
