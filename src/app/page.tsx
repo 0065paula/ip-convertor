@@ -159,7 +159,7 @@ export default function Home() {
                 CIDR 格式说明
                 {isOpen ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
               </CollapsibleTrigger>
-              <CollapsibleContent className="absolute z-50 mt-2 p-4 bg-white border rounded-lg shadow-lg w-[500px] right-4">
+              <CollapsibleContent className="absolute z-50 mt-2 p-4 bg-white border rounded-lg shadow-lg w-[500px] left-1/2 -translate-x-1/2">
                 <div className="relative">
                   <div className="flex items-center justify-center mb-4">
                     <div className="flex items-center border rounded overflow-hidden">
