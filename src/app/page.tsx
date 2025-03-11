@@ -142,7 +142,7 @@ export default function Home() {
         
         <Card>
           <CardHeader className="flex flex-row items-center justify-between">
-            <CardTitle>{t('resultTitle')}</CardTitle>
+            <CardTitle>{t('inputTitle')}</CardTitle>
             <Collapsible open={isOpen} onOpenChange={setIsOpen}>
               <div ref={collapsibleRef}>
                 <CollapsibleTrigger className="text-sm text-muted-foreground hover:text-primary flex items-center gap-1">
@@ -212,7 +212,7 @@ export default function Home() {
 
             {ipRange && (
               <div className="mt-8 space-y-4">
-                <h2 className="text-xl font-semibold mb-4">{t('result')}</h2>
+                <h2 className="text-xl font-semibold mb-4">{t('resultTitle')}</h2>
                 <div className="grid gap-4">
                   <div className="flex justify-between items-center p-3 bg-gray-50 rounded">
                     <div>
