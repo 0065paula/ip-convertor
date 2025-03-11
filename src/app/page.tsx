@@ -259,8 +259,8 @@ export default function Home() {
                       <Label className="text-sm text-gray-500">{t('totalIPsLabel')}</Label>
                       <div className="font-mono">{totalIPs}</div>
                     </div>
-                    <Button variant="outline" className="ml-2" onClick={() => handleCopyToClipboard(ipRange)}>
-                      {t('copyButton')}
+                    <Button variant="ghost" size="icon" onClick={() => handleCopyToClipboard(totalIPs)}>
+                      <Copy className="h-4 w-4" />
                     </Button>
                   </div>
                 </div>
