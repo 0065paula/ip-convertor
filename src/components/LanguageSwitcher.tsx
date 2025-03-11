@@ -9,13 +9,12 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import type { Language } from '@/i18n/LanguageContext';
 
 const languages = [
   { code: 'zh', name: '中文' },
   { code: 'en', name: 'English' },
   { code: 'ja', name: '日本語' },
-  { code: 'ko', name: '한국어' },
-  { code: 'sacred', name: '𝕾𝖆𝖈𝖗𝖊𝖉' },
 ];
 
 export function LanguageSwitcher() {
@@ -33,7 +32,7 @@ export function LanguageSwitcher() {
           {languages.map((lang) => (
             <DropdownMenuItem
               key={lang.code}
-              onClick={() => setLanguage(lang.code as any)}
+              onClick={() => setLanguage(lang.code as Language)}
               className={language === lang.code ? 'bg-accent' : ''}
             >
               {lang.name}
